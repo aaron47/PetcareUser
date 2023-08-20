@@ -68,9 +68,8 @@ class ApiService {
   static Future<List<Pet>> findAllUserPets(String userEmail) async {
     try {
       final response = await _dio.get(ApiEndPoints.GET_PETS_URL + userEmail);
-      List<Pet> pets = (response.data as List)
-          .map((json) => Pet.fromJson(json))
-          .toList();
+      List<Pet> pets =
+          (response.data as List).map((json) => Pet.fromJson(json)).toList();
       return pets;
     } catch (error) {
       throw Exception("Error fetching user pets: $error");
@@ -106,12 +105,28 @@ class ApiService {
             List<Service>.from(value.data.map((x) => Service.fromJson(x))));
   }
 
-  static Future<List<Service>> findAllServices(String userEmail) {
-    return _dio
-        .get(
-          ApiEndPoints.GET_SERVICES_URL + userEmail,
-        )
-        .then((value) =>
-            List<Service>.from(value.data.map((x) => Service.fromJson(x))));
+  static Future<List<Service>> findAllServices(String userEmail) async {
+    try {
+      final response =
+          await _dio.get(ApiEndPoints.GET_SERVICES_URL + userEmail);
+      List<Service> services = (response.data as List)
+          .map((json) => Service.fromJson(json))
+          .toList();
+      return services;
+    } catch (error) {
+      throw Exception("Error fetching services: $error");
+    }
+  }
+
+  static Future<List<String>> findAllUsersInService(String serviceId) async {
+    try {
+      final response =
+          await _dio.get(ApiEndPoints.FIND_USERS_IN_SERVICE_URL + serviceId);
+      List<String> users =
+          (response.data as List).map((json) => json.toString()).toList();
+      return users;
+    } catch (error) {
+      throw Exception("Error fetching users in service: $error");
+    }
   }
 }

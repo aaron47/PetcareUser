@@ -1,9 +1,10 @@
 class ApiEndPoints {
   // AUTH URLS
-  static const String BASE_URL = "https://us-central1-petcare-a1918.cloudfunctions.net/api/";
+  static const String BASE_URL =
+      "https://us-central1-petcare-a1918.cloudfunctions.net/api/";
   static const String LOGIN_URL = "auth/login";
   static const String SIGN_UP_URL = "auth/signUp";
-  static const String GET_USER_URL = "user/";
+  static const String GET_USER_URL = "auth/user/";
 
   // PETS URLS
   static const String ADD_PET_URL = "pets/addPet";
@@ -14,4 +15,6 @@ class ApiEndPoints {
   static const String ADD_OFFERING_USER_URL = "services/addOfferingUser";
   static const String GET_SERVICES_URL = "services/findAll";
   static const String FIND_USER_SERVICES_URL = "services/findUserServices/";
+  static const String FIND_USERS_IN_SERVICE_URL =
+      "services/findUsersByService/";
 }

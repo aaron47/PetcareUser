@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:pet_user_app/models/businessLayer/baseRoute.dart';
 import 'package:pet_user_app/screens/reviewBookingScreen.dart';
 
+import '../controllers/ApiController.dart';
+import '../models/user.dart';
+
 class PetBoardoingDetailScreen extends BaseRoute {
   // PetBoardoingDetailScreen() : super();
-  PetBoardoingDetailScreen({a, o})
+  final User user;
+  PetBoardoingDetailScreen({this.user, a, o})
       : super(a: a, o: o, r: 'PetBoardoingDetailScreen');
   @override
   _PetBoardoingDetailScreenState createState() =>
@@ -16,6 +21,17 @@ class PetBoardoingDetailScreen extends BaseRoute {
 class _PetBoardoingDetailScreenState extends BaseRouteState {
   _PetBoardoingDetailScreenState() : super();
   double ratingVal = 4.0;
+
+  final ApiController apiController = Get.find<ApiController>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await apiController.fetchUserServices(widget.user.email);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +48,7 @@ class _PetBoardoingDetailScreenState extends BaseRouteState {
           ),
         ),
         title: Text(
-          'Sara Abid',
+          widget.user.fullName,
           style: Theme.of(context).primaryTextTheme.headline1,
         ),
         centerTitle: true,
@@ -59,9 +75,11 @@ class _PetBoardoingDetailScreenState extends BaseRouteState {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 28),
                         child: CircleAvatar(
-                            radius: 80,
-                            backgroundImage:
-                                AssetImage('assets/catimage2.png')),
+                          radius: 80,
+                          backgroundImage: widget.user.imageLink != null
+                              ? NetworkImage(widget.user.imageLink)
+                              : AssetImage("assets/splashScreen.png"),
+                        ),
                       ),
                     ),
                   ),
@@ -111,7 +129,6 @@ class _PetBoardoingDetailScreenState extends BaseRouteState {
                     child: Column(
                       children: [
                         Icon(Icons.verified, color: Color(0xfff0900c)),
-                
                         Text(
                           'Verifié',
                           style: TextStyle(
@@ -177,7 +194,7 @@ class _PetBoardoingDetailScreenState extends BaseRouteState {
                 children: [
                   Container(
                     child: Text(
-                      'A propos Sara',
+                      'A propos ${widget.user.fullName}',
                       style: Theme.of(context).primaryTextTheme.headline1,
                     ),
                   )
@@ -190,7 +207,7 @@ class _PetBoardoingDetailScreenState extends BaseRouteState {
                 children: [
                   Expanded(
                       child: Text(
-                          'I am come form a family of animal lover. I have always taken care of my family pets. I was fourteen the firt time.I watched over a friends pets while they were away.'))
+                          "Je viens d'une famille d'amoureux des animaux. J'ai toujours pris soin des animaux de ma famille. J'avais quatorze ans la première fois que j'ai gardé les animaux d'amis pendant leur absence."))
                 ],
               ),
             ),
@@ -209,15 +226,15 @@ class _PetBoardoingDetailScreenState extends BaseRouteState {
             ),
             Container(
               padding: EdgeInsets.only(left: 15, top: 5),
-              child: Row(
-                children: [
-                  Container(
-                    child: Text(
-                      'Pet Boarding & Dog Walking',
-                      style: Theme.of(context).primaryTextTheme.bodyText2,
-                    ),
-                  )
-                ],
+              child: Obx(
+                () => ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: apiController.services.length,
+                  itemBuilder: (context, index) {
+                    var service = apiController.services[index];
+                    return Text(service.serviceName);
+                  },
+                ),
               ),
             ),
             // Container(
@@ -602,17 +619,5 @@ class _PetBoardoingDetailScreenState extends BaseRouteState {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  bool isloading = true;
-
-  @override
-  void initState() {
-    super.initState();
   }
 }

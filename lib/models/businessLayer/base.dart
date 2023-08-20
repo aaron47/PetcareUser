@@ -8,6 +8,7 @@ import 'package:pet_user_app/models/businessLayer/apiHelper.dart';
 import 'package:pet_user_app/models/businessLayer/businessRule.dart';
 
 import '../pet.dart';
+import '../user.dart';
 
 class Base extends StatefulWidget {
   final dynamic analytics;
@@ -15,17 +16,20 @@ class Base extends StatefulWidget {
   final String routeName;
   String email;
   Pet pet;
+  User user;
 
   Base({this.analytics, this.observer, this.routeName, this.email, this.pet});
 
   get emailValue => this.email;
   get petValue => this.pet;
+  get userValue => this.user;
 
   @override
   BaseState createState() => BaseState();
 }
 
-class BaseState extends State<Base> with TickerProviderStateMixin, WidgetsBindingObserver {
+class BaseState extends State<Base>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   bool bannerAdLoaded = false;
 
   APIHelper apiHelper;

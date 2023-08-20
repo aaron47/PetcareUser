@@ -16,6 +16,9 @@ class ApiController extends GetxController {
   var user = User().obs;
   var pets = <Pet>[].obs;
   var services = <Service>[].obs;
+  var usersInService = <String>[].obs;
+  var users = <User>[].obs;
+  var userServices = <Service>[].obs;
 
   Future<ResponseHelper> loginUser(String email, String password) async {
     isLoading.value = true;
@@ -112,5 +115,27 @@ class ApiController extends GetxController {
     }
   }
 
-// Add more methods as needed for other API requests
+  Future<ResponseHelper> findUsersInService(String serviceId) async {
+    isLoading.value = true;
+    try {
+      var usersInServiceResponse =
+          await ApiService.findAllUsersInService(serviceId);
+      usersInService.value = usersInServiceResponse;
+      for (var email in usersInService) {
+        var user = await ApiService.getUser(email);
+        users.add(user);
+      }
+    } catch (e) {
+      error.value = 'Error fetching users in service';
+    }
+
+    isLoading.value = false;
+
+    status.value = true;
+    return ResponseHelper(status: true, isLoading: isLoading.value);
+  }
+
+  void clearUsersList() {
+    users.clear();
+  }
 }
