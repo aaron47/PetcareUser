@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pet_user_app/models/reservation.dart';
 import 'package:pet_user_app/network/remote/Requests/create_pet_request.dart';
 import 'package:pet_user_app/network/remote/Requests/signup_request.dart';
 
@@ -19,6 +20,10 @@ class ApiController extends GetxController {
   var usersInService = <String>[].obs;
   var users = <User>[].obs;
   var userServices = <Service>[].obs;
+  var reservations = <Reservation>[].obs;
+  var reservationsUsers = <User>[].obs;
+  var reservationsServices = <Service>[].obs;
+  var reservationsPets = <Pet>[].obs;
 
   Future<ResponseHelper> loginUser(String email, String password) async {
     isLoading.value = true;
@@ -135,7 +140,46 @@ class ApiController extends GetxController {
     return ResponseHelper(status: true, isLoading: isLoading.value);
   }
 
+  Future<void> fetchAllReservations() async {
+    isLoading.value = true;
+    try {
+      var allReservations = await ApiService.findAllReservations();
+      reservations.addAll(allReservations);
+
+      for (var reservation in allReservations) {
+        var user = await ApiService.getUserById(reservation.sitterId);
+        reservationsUsers.add(user);
+        var service = await ApiService.getService(reservation.serviceId);
+        reservationsServices.add(service);
+        var pet = await ApiService.getPet(reservation.petId);
+        reservationsPets.add(pet);
+      }
+    } catch (e) {
+      error.value = 'Error fetching reservations';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> declineReservation(String id) async {
+    isLoading.value = true;
+    try {
+      await ApiService.declineReservation(id);
+    } catch (e) {
+      error.value = 'Error declining reservation';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   void clearUsersList() {
     users.clear();
+  }
+
+  void clearReservationsList() {
+    reservations.clear();
+    reservationsUsers.clear();
+    reservationsServices.clear();
+    reservationsPets.clear();
   }
 }

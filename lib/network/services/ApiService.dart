@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:pet_user_app/models/reservation.dart';
 import 'package:pet_user_app/network/remote/Requests/add_offering_user_request.dart';
 import 'package:pet_user_app/network/remote/Requests/create_pet_request.dart';
 import 'package:pet_user_app/network/remote/Requests/create_service_request.dart';
@@ -55,12 +56,36 @@ class ApiService {
         .then((value) => User.fromJson(value.data));
   }
 
+  static Future<User> getUserById(String id) {
+    return _dio
+        .get(
+          ApiEndPoints.GET_USER_BY_ID_URL + id,
+        )
+        .then((value) => User.fromJson(value.data));
+  }
+
+  static Future<Service> getService(String id) {
+    return _dio
+        .get(
+          ApiEndPoints.GET_SERVICE_BY_ID_URL + id,
+        )
+        .then((value) => Service.fromJson(value.data));
+  }
+
   // PETS
   static Future<Pet> addPet(CreatePetRequest createPetRequest) {
     return _dio
         .post(
           ApiEndPoints.ADD_PET_URL,
           data: createPetRequest.toJson(),
+        )
+        .then((value) => Pet.fromJson(value.data));
+  }
+
+  static Future<Pet> getPet(String id) {
+    return _dio
+        .get(
+          ApiEndPoints.GET_PET_BY_ID_URL + id,
         )
         .then((value) => Pet.fromJson(value.data));
   }
@@ -127,6 +152,36 @@ class ApiService {
       return users;
     } catch (error) {
       throw Exception("Error fetching users in service: $error");
+    }
+  }
+
+  static Future<List<Reservation>> findAllReservations() async {
+    try {
+      final response = await _dio.get(
+        ApiEndPoints.FIND_ALL_RESERVATIONS_URL,
+      );
+
+      print("RES: $response");
+
+      List<Reservation> reservations = (response.data as List)
+          .map((json) => Reservation.fromJson(json))
+          .toList();
+
+      print(reservations);
+
+      return reservations;
+    } catch (error) {
+      throw Exception("Error fetching reservations: $error");
+    }
+  }
+
+  static Future<void> declineReservation(String id) async {
+    try {
+      await _dio.post(
+        ApiEndPoints.BASE_URL + "reservations/$id/decline",
+      );
+    } catch (error) {
+      throw Exception("Error declining reservation: $error");
     }
   }
 }
