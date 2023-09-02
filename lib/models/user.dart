@@ -15,6 +15,7 @@ class User {
   final String gender;
   final String imageLink;
   final String address;
+  final String accountStatus;
 
   User({
     @required this.id,
@@ -25,18 +26,19 @@ class User {
     @required this.imageLink,
     @required this.address,
     @required this.gender,
+    @required this.accountStatus,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json["_id"],
-        fullName: json["fullName"],
-        email: json["email"],
-        role: json["role"],
-        phone: json["phone"],
-        gender: json["gender"],
-        imageLink: json["imageLink"],
-        address: json["address"],
-      );
+      id: json["_id"],
+      fullName: json["fullName"],
+      email: json["email"],
+      role: json["role"],
+      phone: json["phone"],
+      gender: json["gender"],
+      imageLink: json["imageLink"],
+      address: json["address"],
+      accountStatus: json["accountStatus"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,

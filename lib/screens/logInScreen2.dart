@@ -179,8 +179,23 @@ class _LogInScreen2State extends BaseRouteState {
                                 icon: Icons.warning,
                                 primaryColor: Colors.red,
                                 title: Text("Error de connection"),
-                                description:
-                                    Text("Type d'utilisateur incorrecte"),
+                                description: Text(
+                                    "Type d'utilisateur incorrecte ou compte n'est pas active"),
+                                width: 300,
+                                height: 100,
+                              ).show(context);
+                              return;
+                            }
+
+                            if (response.status == true &&
+                                apiController.user.value.accountStatus ==
+                                    "pending") {
+                              MotionToast(
+                                icon: Icons.warning,
+                                primaryColor: Color.fromARGB(255, 0, 27, 49),
+                                title: Text("Error de connection"),
+                                description: Text(
+                                    "Votre compte n'est pas active, contactez un admin."),
                                 width: 300,
                                 height: 100,
                               ).show(context);
