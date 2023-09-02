@@ -14,8 +14,7 @@ import '../models/sevice_ids.dart';
 class ServiceScreen extends BaseRoute {
   // PetBoardingScreen() : super();
   final Service service;
-  ServiceScreen({this.service, a, o})
-      : super(a: a, o: o, r: 'PetBoardingScreen');
+  ServiceScreen({this.service, a, o}) : super(a: a, o: o, r: 'PetBoardingScreen');
   @override
   _ServiceScreenState createState() => new _ServiceScreenState();
 }
@@ -151,49 +150,36 @@ class _ServiceScreenState extends BaseRouteState {
                                 Container(
                                   // color: Colors.green,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 10, left: 10),
+                                    padding: const EdgeInsets.only(top: 10, left: 10),
                                     child: Row(
                                       children: [
                                         CircleAvatar(
                                           radius: 38,
-                                          backgroundImage: user.imageLink !=
-                                                  null
-                                              ? NetworkImage(user.imageLink)
-                                              : AssetImage(
-                                                  "assets/splashScreen.png"),
+                                          backgroundImage:
+                                              user.imageLink != null ? NetworkImage(user.imageLink) : AssetImage("assets/splashScreen.png"),
                                         ),
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
+                                          padding: const EdgeInsets.only(left: 10),
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 user.fullName,
-                                                style: Theme.of(context)
-                                                    .primaryTextTheme
-                                                    .headline1,
+                                                style: Theme.of(context).primaryTextTheme.headline1,
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 5),
+                                                padding: const EdgeInsets.only(top: 5),
                                                 child: Row(
                                                   children: [
                                                     RatingBar.builder(
                                                       initialRating: 4,
                                                       minRating: 0,
-                                                      direction:
-                                                          Axis.horizontal,
+                                                      direction: Axis.horizontal,
                                                       allowHalfRating: true,
                                                       itemCount: 5,
                                                       itemSize: 20,
-                                                      itemPadding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 0),
-                                                      itemBuilder:
-                                                          (context, _) => Icon(
+                                                      itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                                                      itemBuilder: (context, _) => Icon(
                                                         Icons.star,
                                                         color: Colors.amber,
                                                       ),
@@ -215,34 +201,28 @@ class _ServiceScreenState extends BaseRouteState {
                                           // color: Colors.yellow,
                                           padding: EdgeInsets.only(),
                                           child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Row(
                                                 children: [
                                                   Icon(
-                                                    FontAwesomeIcons
-                                                        .checkCircle,
+                                                    FontAwesomeIcons.checkCircle,
                                                     size: 12,
                                                     color: Color(0xFFF0900C),
                                                   ),
                                                   Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 5),
+                                                    padding: const EdgeInsets.only(left: 5),
                                                     child: Text(
                                                       'Verified',
                                                       style: TextStyle(
                                                         fontSize: 11.5,
-                                                        color:
-                                                            Color(0xFFF0900C),
+                                                        color: Color(0xFFF0900C),
                                                       ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
-                                              Text(
-                                                  '${widget.service.price} TND/ jour')
+                                              Text('${widget.service.price} TND/ jour')
                                             ],
                                           ),
                                         )
@@ -253,20 +233,17 @@ class _ServiceScreenState extends BaseRouteState {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      PetBoardoingDetailScreen(
-                                                        a: widget.analytics,
-                                                        o: widget.observer,
-                                                        user: user,
-                                                        service: widget.service,
-                                                      )));
+                                          Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (context) => PetBoardoingDetailScreen(
+                                                    a: widget.analytics,
+                                                    o: widget.observer,
+                                                    user: user,
+                                                    service: widget.service,
+                                                  )));
                                         },
                                         child: Container(
                                           margin: EdgeInsets.only(left: 15),
@@ -276,18 +253,12 @@ class _ServiceScreenState extends BaseRouteState {
                                           child: Center(
                                             child: Text(
                                               'Voir le profil',
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
+                                              style: TextStyle(color: Theme.of(context).primaryColor),
                                             ),
                                           ),
                                           decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  width: 1,
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
+                                              border: Border.all(width: 1, color: Theme.of(context).primaryColor),
+                                              borderRadius: BorderRadius.all(Radius.circular(5))),
                                         ),
                                       ),
                                       Container(
@@ -298,24 +269,16 @@ class _ServiceScreenState extends BaseRouteState {
                                           width: 125,
                                           child: TextButton(
                                               style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          Theme.of(context)
-                                                              .primaryColor),
-                                                  textStyle:
-                                                      MaterialStateProperty.all(
-                                                          TextStyle(
-                                                              fontSize: 13))),
+                                                  backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
+                                                  textStyle: MaterialStateProperty.all(TextStyle(fontSize: 13))),
                                               onPressed: () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ReviewBookingScreen(
-                                                              a: widget
-                                                                  .analytics,
-                                                              o: widget
-                                                                  .observer,
-                                                            )));
+                                                Navigator.of(context).push(MaterialPageRoute(
+                                                    builder: (context) => PetBoardoingDetailScreen(
+                                                          a: widget.analytics,
+                                                          o: widget.observer,
+                                                          user: user,
+                                                          service: widget.service,
+                                                        )));
                                               },
                                               child: Text(
                                                 "Réserver",

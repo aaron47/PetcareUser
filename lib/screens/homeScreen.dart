@@ -2,10 +2,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pet_user_app/models/businessLayer/baseRoute.dart';
-import 'package:pet_user_app/screens/dogWalkingScreen.dart';
-import 'package:pet_user_app/screens/petBoardingScreen.dart';
 import 'package:pet_user_app/screens/service_screen.dart';
-import 'package:pet_user_app/screens/veterinaryScreen.dart';
 
 import '../controllers/ApiController.dart';
 
@@ -134,9 +131,7 @@ class _HomeScreenState extends BaseRouteState {
                       padding: const EdgeInsets.only(left: 10),
                       child: Row(
                         children: [
-                          Text('Nos services',
-                              style:
-                                  Theme.of(context).primaryTextTheme.subtitle2),
+                          Text('Nos services', style: Theme.of(context).primaryTextTheme.subtitle2),
                         ],
                       ),
                     )
@@ -145,7 +140,7 @@ class _HomeScreenState extends BaseRouteState {
               ),
               Container(
                 margin: EdgeInsets.only(top: 20),
-                height: 130,
+                height: 160,
                 width: MediaQuery.of(context).size.width,
                 child: Obx(
                   () => ListView.builder(
@@ -168,6 +163,7 @@ class _HomeScreenState extends BaseRouteState {
                             child: Container(
                               // color: Colors.red,
                               width: 90,
+                              height: 150,
                               child: Card(
                                 elevation: 5,
                                 child: Column(
@@ -175,16 +171,14 @@ class _HomeScreenState extends BaseRouteState {
                                     service.imageLink != ""
                                         ? Image.network(
                                             service.imageLink,
+                                            width: 90,
+                                            height: 100,
                                             fit: BoxFit.contain,
                                           )
-                                        : Image.asset(
-                                            "assets/homepetboarding.png",
-                                            fit: BoxFit.cover),
+                                        : Image.asset("assets/homepetboarding.png", fit: BoxFit.cover),
                                     Text(
                                       service.serviceName,
-                                      style: Theme.of(context)
-                                          .primaryTextTheme
-                                          .headline6,
+                                      style: Theme.of(context).primaryTextTheme.headline6,
                                     ),
                                   ],
                                 ),
@@ -202,8 +196,7 @@ class _HomeScreenState extends BaseRouteState {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Les meilleurs offres',
-                        style: Theme.of(context).primaryTextTheme.bodyText1),
+                    Text('Les meilleurs offres', style: Theme.of(context).primaryTextTheme.bodyText1),
                     Text(
                       'Tout afficher',
                       style: Theme.of(context).primaryTextTheme.headline6,
@@ -232,20 +225,14 @@ class _HomeScreenState extends BaseRouteState {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width - 100,
+                                  width: MediaQuery.of(context).size.width - 100,
                                   // color: Colors.red,
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 15, left: 10, bottom: 10),
-                                        child: Text(offre.description,
-                                            style: Theme.of(context)
-                                                .primaryTextTheme
-                                                .headline3),
+                                        padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
+                                        child: Text(offre.description, style: Theme.of(context).primaryTextTheme.headline3),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
@@ -253,10 +240,7 @@ class _HomeScreenState extends BaseRouteState {
                                         ),
                                         child: Row(
                                           children: [
-                                            Text('01/07 -> 31/08',
-                                                style: Theme.of(context)
-                                                    .primaryTextTheme
-                                                    .headline2),
+                                            Text('01/07 -> 31/08', style: Theme.of(context).primaryTextTheme.headline2),
                                             // Padding(
                                             //   padding: const EdgeInsets.only(
                                             //       left: 2, right: 2),
@@ -273,18 +257,14 @@ class _HomeScreenState extends BaseRouteState {
                                             //       .headline2,
                                             // ),
                                             Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 2, right: 2),
+                                              padding: const EdgeInsets.only(left: 2, right: 2),
                                               child: Icon(
                                                 Icons.circle,
                                                 size: 10,
                                                 color: Colors.white,
                                               ),
                                             ),
-                                            Text('${offre.prix}/ mois',
-                                                style: Theme.of(context)
-                                                    .primaryTextTheme
-                                                    .headline2)
+                                            Text('${offre.prix}/ mois', style: Theme.of(context).primaryTextTheme.headline2)
                                           ],
                                         ),
                                       )
@@ -296,8 +276,7 @@ class _HomeScreenState extends BaseRouteState {
                                   child: CircleAvatar(
                                       radius: 30,
                                       // backgroundColor: Colors.red,
-                                      backgroundImage:
-                                          AssetImage('assets/home4.png')),
+                                      backgroundImage: AssetImage('assets/home4.png')),
                                 )
                               ],
                             ),
@@ -314,9 +293,7 @@ class _HomeScreenState extends BaseRouteState {
                       },
                     ),
                   ),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.all(Radius.circular(10))),
                 ),
               ),
               Padding(
@@ -324,10 +301,8 @@ class _HomeScreenState extends BaseRouteState {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Articles',
-                        style: Theme.of(context).primaryTextTheme.bodyText1),
-                    Text('Tout afficher',
-                        style: Theme.of(context).primaryTextTheme.headline6)
+                    Text('Articles', style: Theme.of(context).primaryTextTheme.bodyText1),
+                    Text('Tout afficher', style: Theme.of(context).primaryTextTheme.headline6)
                   ],
                 ),
               ),
@@ -342,8 +317,7 @@ class _HomeScreenState extends BaseRouteState {
                       return Container(
                         height: 110,
                         child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                           elevation: 5,
                           child: Container(
                               padding: EdgeInsets.all(3),
@@ -353,27 +327,21 @@ class _HomeScreenState extends BaseRouteState {
                                   Container(
                                       margin: EdgeInsets.only(left: 10),
                                       // color: Colors.green,
-                                      width: MediaQuery.of(context).size.width -
-                                          134,
+                                      width: MediaQuery.of(context).size.width - 134,
                                       height: 120,
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
                                                 'Hello this is good news',
-                                                style: Theme.of(context)
-                                                    .primaryTextTheme
-                                                    .bodyText1,
+                                                style: Theme.of(context).primaryTextTheme.bodyText1,
                                               ),
                                               Icon(
                                                 Icons.bookmark,
-                                                color: Theme.of(context)
-                                                    .primaryColor,
+                                                color: Theme.of(context).primaryColor,
                                               )
                                             ],
                                           ),
@@ -382,9 +350,7 @@ class _HomeScreenState extends BaseRouteState {
                                             child: Text(
                                               'In publishing and graphic design, Lorem ipsum is a placeholder text,Lorem ipsum is a placeholder text ',
                                               overflow: TextOverflow.ellipsis,
-                                              style: Theme.of(context)
-                                                  .primaryTextTheme
-                                                  .subtitle2,
+                                              style: Theme.of(context).primaryTextTheme.subtitle2,
                                               maxLines: 3,
                                             ),
                                           ),

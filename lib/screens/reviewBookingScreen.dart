@@ -15,7 +15,7 @@ class ReviewBookingScreen extends BaseRoute {
   // ReviewBookingScreen() : super();
   final User user;
   final Service service;
-  ReviewBookingScreen({this.user, this.service, a, o})
+  ReviewBookingScreen({@required this.user, @required this.service, a, o})
       : super(a: a, o: o, r: 'ReviewBookingScreen');
 
   @override
@@ -81,8 +81,8 @@ class _ReviewBookingScreenState extends BaseRouteState {
                     padding: const EdgeInsets.only(left: 28),
                     child: CircleAvatar(
                         radius: 70,
-                        backgroundImage: widget.user.imageLink != ""
-                            ? NetworkImage(widget.user.imageLink)
+                        backgroundImage: widget?.user?.imageLink != ""
+                            ? NetworkImage(widget.user?.imageLink)
                             : AssetImage("assets/splashLogo.png")),
                   ),
                   Padding(

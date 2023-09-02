@@ -215,7 +215,7 @@ class _PostListScreenState extends BaseRouteState {
                             );
                           }),
                     )
-                  : Container(),
+                  : CircularProgressIndicator(),
             ],
           ),
         ));
