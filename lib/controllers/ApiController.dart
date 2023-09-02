@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:pet_user_app/models/article.dart';
 import 'package:pet_user_app/network/remote/Requests/create_reservation.dart';
@@ -169,18 +171,10 @@ class ApiController extends GetxController {
     isLoading.value = true;
     try {
       var allReservations = await ApiService.findAllReservations();
-      reservations.addAll(allReservations);
-
-      for (var reservation in allReservations) {
-        var user = await ApiService.getUserById(reservation.sitterId);
-        reservationsUsers.add(user);
-        var service = await ApiService.getService(reservation.serviceId);
-        reservationsServices.add(service);
-        var pet = await ApiService.getPet(reservation.petId);
-        reservationsPets.add(pet);
-      }
+      reservations.value = allReservations;
     } catch (e) {
-      error.value = 'Error fetching reservations';
+      print("ERROR: $e");
+      error.value = 'Error fetching reservations: $e';
     } finally {
       isLoading.value = false;
     }
