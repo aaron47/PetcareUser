@@ -27,6 +27,7 @@ class _OrdersScreenState extends BaseRouteState {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await apiController.fetchAllReservations();
+      print("RESERVATIONS: ${apiController.reservations.length}");
     });
     super.initState();
   }
@@ -90,7 +91,7 @@ class _OrdersScreenState extends BaseRouteState {
                 margin: EdgeInsets.only(top: 10),
                 height: 550,
                 child: DefaultTabController(
-                  length: 2,
+                  length: 3,
                   child: Scaffold(
                     body: Column(
                       children: <Widget>[
@@ -115,6 +116,13 @@ class _OrdersScreenState extends BaseRouteState {
                                     indicatorColor:
                                         Theme.of(context).primaryColor,
                                     tabs: [
+                                      Tab(
+                                        child: Container(
+                                          child: Text(
+                                            'Tous',
+                                          ),
+                                        ),
+                                      ),
                                       Tab(
                                         child: Container(
                                           child: Text(
@@ -146,41 +154,36 @@ class _OrdersScreenState extends BaseRouteState {
                                 // first tab bar view widget
                                 Container(
                                   child: Obx(() {
-                                    if (apiController.isLoading.value) {
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
+                                    // if (apiController.isLoading.value) {
+                                    //   return const Center(
+                                    //     child: CircularProgressIndicator(),
+                                    //   );
+                                    // }
 
-                                    if (apiController.reservations.isEmpty ||
-                                        apiController
-                                            .reservationsUsers.isEmpty ||
-                                        apiController
-                                            .reservationsServices.isEmpty) {
-                                      return const Center(
-                                        child: Text('No data'),
-                                      );
-                                    }
+                                    // if (apiController.reservations.isEmpty ||
+                                    //     apiController
+                                    //         .reservationsUsers.isEmpty ||
+                                    //     apiController
+                                    //         .reservationsServices.isEmpty) {
+                                    //   return const Center(
+                                    //     child: Text('No data'),
+                                    //   );
+                                    // }
 
                                     return ListView.builder(
-                                      itemCount: apiController.reservations
-                                          .where((reserv) =>
-                                              reserv.status == "pending")
-                                          .toList()
-                                          .length,
+                                      itemCount:
+                                          apiController.reservations.length,
                                       itemBuilder:
                                           (BuildContext ctx, int index) {
-                                        final reservation = apiController
-                                            .reservations
-                                            .where((reserv) =>
-                                                reserv.status == "pending")
-                                            .toList()[index];
-                                        final user = apiController
-                                            .reservationsUsers[index];
-                                        final service = apiController
-                                            .reservationsServices[index];
-                                        final pet = apiController
-                                            .reservationsPets[index];
+                                        final reservation =
+                                            apiController.reservations[index];
+                                        print(reservation.sitterId);
+                                        // final user = apiController
+                                        //     .reservationsUsers[index];
+                                        // final service = apiController
+                                        //     .reservationsServices[index];
+                                        // final pet = apiController
+                                        //     .reservationsPets[index];
 
                                         return Padding(
                                           padding: EdgeInsets.only(),
@@ -221,8 +224,9 @@ class _OrdersScreenState extends BaseRouteState {
                                                                   CircleAvatar(
                                                                     radius: 38,
                                                                     backgroundImage:
-                                                                        NetworkImage(
-                                                                            user.imageLink),
+                                                                        NetworkImage(reservation
+                                                                            .pet
+                                                                            .petImageLink),
                                                                   ),
                                                                   Container(
                                                                     margin: EdgeInsets
@@ -230,7 +234,9 @@ class _OrdersScreenState extends BaseRouteState {
                                                                             top:
                                                                                 10),
                                                                     child: Text(
-                                                                      user.fullName,
+                                                                      reservation
+                                                                          .user
+                                                                          .fullName,
                                                                       style: Theme.of(
                                                                               context)
                                                                           .primaryTextTheme
@@ -251,7 +257,8 @@ class _OrdersScreenState extends BaseRouteState {
                                                                         .start,
                                                                 children: [
                                                                   Text(
-                                                                    service
+                                                                    reservation
+                                                                        .service
                                                                         .serviceName
                                                                         .split(
                                                                             ' ')[0],
@@ -271,7 +278,7 @@ class _OrdersScreenState extends BaseRouteState {
                                                                               const EdgeInsets.only(left: 5),
                                                                           child:
                                                                               Text(
-                                                                            "${pet.petName} ${pet.petType}",
+                                                                            "${reservation.pet.petName} ${reservation.pet.petType}",
                                                                             style:
                                                                                 Theme.of(context).primaryTextTheme.subtitle2,
                                                                           ),
@@ -427,11 +434,11 @@ class _OrdersScreenState extends BaseRouteState {
                                                                       .verified,
                                                                   primaryColor:
                                                                       Colors
-                                                                          .green,
+                                                                          .yellow,
                                                                   title: Text(
-                                                                      "Success"),
+                                                                      "Anunule"),
                                                                   description: Text(
-                                                                      "Vous êtes connecté avec succes!"),
+                                                                      "Reservation annulee"),
                                                                   width: 300,
                                                                   height: 100,
                                                                   onClose: () {
@@ -533,37 +540,39 @@ class _OrdersScreenState extends BaseRouteState {
                                 // second tab bar view widget
                                 Container(
                                   child: Obx(() {
-                                    if (apiController.isLoading.value) {
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
+                                    // if (apiController.isLoading.value) {
+                                    //   return const Center(
+                                    //     child: CircularProgressIndicator(),
+                                    //   );
+                                    // }
 
-                                    if (apiController.reservations.isEmpty ||
-                                        apiController
-                                            .reservationsUsers.isEmpty ||
-                                        apiController
-                                            .reservationsServices.isEmpty) {
-                                      return const Center(
-                                        child: Text('No data'),
-                                      );
-                                    }
+                                    // if (apiController.reservations.isEmpty ||
+                                    //     apiController
+                                    //         .reservationsUsers.isEmpty ||
+                                    //     apiController
+                                    //         .reservationsServices.isEmpty) {
+                                    //   return const Center(
+                                    //     child: Text('No data'),
+                                    //   );
+                                    // }
 
                                     return ListView.builder(
                                       itemCount: apiController.reservations
-                                          .where((reserv) =>
-                                              reserv.status == "accepted")
+                                          .where((r) => r.status == "pending")
                                           .length,
                                       itemBuilder:
                                           (BuildContext ctx, int index) {
-                                        final reservation =
-                                            apiController.reservations[index];
-                                        final user = apiController
-                                            .reservationsUsers[index];
-                                        final service = apiController
-                                            .reservationsServices[index];
-                                        final pet = apiController
-                                            .reservationsPets[index];
+                                        final reservation = apiController
+                                            .reservations
+                                            .where((r) => r.status == "pending")
+                                            .toList()[index];
+                                        print(reservation.sitterId);
+                                        // final user = apiController
+                                        //     .reservationsUsers[index];
+                                        // final service = apiController
+                                        //     .reservationsServices[index];
+                                        // final pet = apiController
+                                        //     .reservationsPets[index];
 
                                         return Padding(
                                           padding: EdgeInsets.only(),
@@ -604,8 +613,9 @@ class _OrdersScreenState extends BaseRouteState {
                                                                   CircleAvatar(
                                                                     radius: 38,
                                                                     backgroundImage:
-                                                                        NetworkImage(
-                                                                            user.imageLink),
+                                                                        NetworkImage(reservation
+                                                                            .pet
+                                                                            .petImageLink),
                                                                   ),
                                                                   Container(
                                                                     margin: EdgeInsets
@@ -613,7 +623,9 @@ class _OrdersScreenState extends BaseRouteState {
                                                                             top:
                                                                                 10),
                                                                     child: Text(
-                                                                      user.fullName,
+                                                                      reservation
+                                                                          .user
+                                                                          .fullName,
                                                                       style: Theme.of(
                                                                               context)
                                                                           .primaryTextTheme
@@ -634,7 +646,8 @@ class _OrdersScreenState extends BaseRouteState {
                                                                         .start,
                                                                 children: [
                                                                   Text(
-                                                                    service
+                                                                    reservation
+                                                                        .service
                                                                         .serviceName
                                                                         .split(
                                                                             ' ')[0],
@@ -654,7 +667,398 @@ class _OrdersScreenState extends BaseRouteState {
                                                                               const EdgeInsets.only(left: 5),
                                                                           child:
                                                                               Text(
-                                                                            "${pet.petName} ${pet.petType}",
+                                                                            "${reservation.pet.petName} ${reservation.pet.petType}",
+                                                                            style:
+                                                                                Theme.of(context).primaryTextTheme.subtitle2,
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  // Padding(
+                                                                  //   padding: const EdgeInsets.only(top: 1),
+                                                                  //   child: Row(
+                                                                  //     children: [
+                                                                  //       Padding(
+                                                                  //         padding: const EdgeInsets.only(left: 5),
+                                                                  //         child: Text(
+                                                                  //           '2 daily meals',
+                                                                  //           style: Theme.of(context).primaryTextTheme.subtitle2,
+                                                                  //         ),
+                                                                  //       )
+                                                                  //     ],
+                                                                  //   ),
+                                                                  // ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        top: 1),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.only(left: 5),
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Text(
+                                                                                'Début: ',
+                                                                                style: Theme.of(context).primaryTextTheme.subtitle2,
+                                                                              ),
+                                                                              Text(
+                                                                                '${reservation.dateDeb}',
+                                                                                style: Theme.of(context).primaryTextTheme.subtitle2,
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        top: 1),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.only(left: 5),
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Text(
+                                                                                'Fin: ',
+                                                                                style: Theme.of(context).primaryTextTheme.subtitle2,
+                                                                              ),
+                                                                              Text(
+                                                                                '${reservation.dateFin}',
+                                                                                style: Theme.of(context).primaryTextTheme.subtitle2,
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              height: 110,
+                                                              // color:
+                                                              //     Colors.yellow,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .only(),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Row(
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(right: 1),
+                                                                        child:
+                                                                            Text(
+                                                                          'reservation ID: ${reservation.id.substring(0, 6)}',
+                                                                          style:
+                                                                              TextStyle(
+                                                                            fontSize:
+                                                                                10.5,
+                                                                            color:
+                                                                                Color(0xFFF0900C),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Container(
+                                                                      padding: EdgeInsets.only(
+                                                                          left:
+                                                                              20),
+                                                                      child: Text(
+                                                                          '${reservation.prixTotal} dt')),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin: EdgeInsets.only(
+                                                        left: 10, right: 10),
+                                                    child: Divider(
+                                                      height: 10,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  left: 15),
+                                                          padding:
+                                                              EdgeInsets.all(6),
+                                                          width: 125,
+                                                          height: 36,
+                                                          child: InkWell(
+                                                            onTap: () async {
+                                                              await ApiService
+                                                                  .declineReservation(
+                                                                      reservation
+                                                                          .id);
+
+                                                              MotionToast(
+                                                                  icon: Icons
+                                                                      .verified,
+                                                                  primaryColor:
+                                                                      Colors
+                                                                          .yellow,
+                                                                  title: Text(
+                                                                      "Anunule"),
+                                                                  description: Text(
+                                                                      "Reservation annulee"),
+                                                                  width: 300,
+                                                                  height: 100,
+                                                                  onClose: () {
+                                                                    apiController
+                                                                        .reservations
+                                                                        .removeWhere((reserv) =>
+                                                                            reserv.id ==
+                                                                            reservation.id);
+                                                                  }).show(context);
+                                                            },
+                                                            child: Center(
+                                                              child: Container(
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Icon(
+                                                                      Icons
+                                                                          .cancel,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      size: 15,
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              3,
+                                                                          left:
+                                                                              2),
+                                                                      child:
+                                                                          Text(
+                                                                        'Annuler',
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Text('|'),
+                                                        ),
+                                                        Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  right: 15),
+                                                          //  padding: EdgeInsets.all(6),
+                                                          width: 125,
+                                                          height: 36,
+                                                          child: Center(
+                                                            child: Container(
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Icon(
+                                                                    Icons.call,
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .primaryColor,
+                                                                    size: 15,
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        top:
+                                                                            3.0,
+                                                                        left:
+                                                                            2),
+                                                                    child: Text(
+                                                                      'Message',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Theme.of(context).primaryColor),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }),
+                                ),
+
+                                Container(
+                                  child: Obx(() {
+                                    // if (apiController.isLoading.value) {
+                                    //   return const Center(
+                                    //     child: CircularProgressIndicator(),
+                                    //   );
+                                    // }
+
+                                    // if (apiController.reservations.isEmpty ||
+                                    //     apiController
+                                    //         .reservationsUsers.isEmpty ||
+                                    //     apiController
+                                    //         .reservationsServices.isEmpty) {
+                                    //   return const Center(
+                                    //     child: Text('No data'),
+                                    //   );
+                                    // }
+
+                                    return ListView.builder(
+                                      itemCount: apiController.reservations
+                                          .where((reserv) =>
+                                              reserv.status == "accepted" ||
+                                              reserv.status == "declined")
+                                          .length,
+                                      itemBuilder:
+                                          (BuildContext ctx, int index) {
+                                        final reservation = apiController
+                                            .reservations
+                                            .where((reserv) =>
+                                                reserv.status == "accepted" ||
+                                                reserv.status == "declined")
+                                            .toList()[index];
+                                        // final user = apiController
+                                        //     .reservationsUsers[index];
+                                        // final service = apiController
+                                        //     .reservationsServices[index];
+                                        // final pet = apiController
+                                        //     .reservationsPets[index];
+
+                                        return Padding(
+                                          padding: EdgeInsets.only(),
+                                          child: Card(
+                                            elevation: 3,
+                                            child: Container(
+                                              height: 175,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: Column(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  OrderDetailScreen(
+                                                                    a: widget
+                                                                        .analytics,
+                                                                    o: widget
+                                                                        .observer,
+                                                                  )));
+                                                    },
+                                                    child: Container(
+                                                      //color: Colors.green,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 10,
+                                                                left: 10),
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              child: Column(
+                                                                children: [
+                                                                  CircleAvatar(
+                                                                    radius: 38,
+                                                                    backgroundImage:
+                                                                        NetworkImage(reservation
+                                                                            .pet
+                                                                            .petImageLink),
+                                                                  ),
+                                                                  Container(
+                                                                    margin: EdgeInsets
+                                                                        .only(
+                                                                            top:
+                                                                                10),
+                                                                    child: Text(
+                                                                      reservation
+                                                                          .user
+                                                                          .fullName,
+                                                                      style: Theme.of(
+                                                                              context)
+                                                                          .primaryTextTheme
+                                                                          .headline6,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 5),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    reservation
+                                                                        .service
+                                                                        .serviceName
+                                                                        .split(
+                                                                            ' ')[0],
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .primaryTextTheme
+                                                                        .headline1,
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        top: 1),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.only(left: 5),
+                                                                          child:
+                                                                              Text(
+                                                                            "${reservation.pet.petName} ${reservation.pet.petType}",
                                                                             style:
                                                                                 Theme.of(context).primaryTextTheme.subtitle2,
                                                                           ),

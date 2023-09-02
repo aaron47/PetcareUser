@@ -339,6 +339,8 @@ class _HomeScreenState extends BaseRouteState {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
+                      var article = this.apiController.articles[index];
+                      var now = DateTime.now();
                       return Container(
                         height: 110,
                         child: Card(
@@ -350,6 +352,41 @@ class _HomeScreenState extends BaseRouteState {
                               width: MediaQuery.of(context).size.width,
                               child: Row(
                                 children: [
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      article.imageLink),
+                                                  fit: BoxFit.cover),
+                                              color: Colors.red,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              )),
+                                          height: 70,
+                                          width: 80,
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(
+                                              top: 2,
+                                              bottom: 2,
+                                              left: 7,
+                                              right: 7),
+                                          margin: EdgeInsets.only(top: 3),
+                                          child: Text(article.type,
+                                              style: Theme.of(context)
+                                                  .primaryTextTheme
+                                                  .headline6),
+                                          decoration: BoxDecoration(
+                                              color: Color(0xFFc9d0f2),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                   Container(
                                       margin: EdgeInsets.only(left: 10),
                                       // color: Colors.green,
@@ -365,7 +402,7 @@ class _HomeScreenState extends BaseRouteState {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                'Hello this is good news',
+                                                article.type,
                                                 style: Theme.of(context)
                                                     .primaryTextTheme
                                                     .bodyText1,
@@ -377,10 +414,11 @@ class _HomeScreenState extends BaseRouteState {
                                               )
                                             ],
                                           ),
-                                          Text('@ 10th february 2021'),
+                                          Text(
+                                              "${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}/${now.year.toString()}"),
                                           Expanded(
                                             child: Text(
-                                              'In publishing and graphic design, Lorem ipsum is a placeholder text,Lorem ipsum is a placeholder text ',
+                                              article.details,
                                               overflow: TextOverflow.ellipsis,
                                               style: Theme.of(context)
                                                   .primaryTextTheme

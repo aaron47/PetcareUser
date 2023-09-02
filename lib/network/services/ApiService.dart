@@ -169,9 +169,6 @@ class ApiService {
       List<Reservation> reservations = (response.data as List)
           .map((json) => Reservation.fromJson(json))
           .toList();
-
-      print(reservations);
-
       return reservations;
     } catch (error) {
       throw Exception("Error fetching reservations: $error");

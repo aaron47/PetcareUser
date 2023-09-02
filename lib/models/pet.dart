@@ -16,7 +16,7 @@ class Pet {
   final String petGender;
   final String petBloodPressure;
   final String petBoneDensity;
-  final double petWeight; // Change to double
+  final int petWeight; // Change to double
   final String petOwner;
 
   Pet({
@@ -45,7 +45,7 @@ class Pet {
       petGender: json["petGender"],
       petBloodPressure: json["petBloodPressure"],
       petBoneDensity: json["petBoneDensity"],
-      petWeight: json["petWeight"].toDouble(),
+      petWeight: json["petWeight"],
       // Convert to double
       petOwner: json["petOwner"],
     );
