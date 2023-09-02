@@ -154,7 +154,7 @@ class _IntroScreenState extends BaseRouteState {
             : SizedBox(),
         selectedPage == 3
             ? Positioned(
-                bottom: 0,
+                bottom: 25,
                 child: Container(
                     // color: Colors.red,
                     height: 45,

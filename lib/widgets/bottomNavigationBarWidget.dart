@@ -125,8 +125,7 @@ class _BottomNavigationWidgetState extends BaseRouteState {
           o: widget.observer,
         ),
         PostListScreen(
-          a: widget.analytics,
-          o: widget.observer,
+
         ),
         ProfileScreen(a: widget.analytics, o: widget.observer),
       ];
