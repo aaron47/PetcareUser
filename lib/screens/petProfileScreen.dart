@@ -53,7 +53,8 @@ class _PetProfileScreenState extends BaseRouteState {
                         padding: const EdgeInsets.only(left: 28),
                         child: CircleAvatar(
                             radius: 80,
-                            backgroundImage: NetworkImage(widget.pet.petImageLink)),
+                            backgroundImage:
+                                NetworkImage(widget.pet.petImageLink)),
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 25),
@@ -119,13 +120,13 @@ class _PetProfileScreenState extends BaseRouteState {
                             Padding(
                               padding: EdgeInsets.only(),
                               child: Icon(
-                                FontAwesomeIcons.briefcaseMedical,
+                                FontAwesomeIcons.cat,
                               ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 15),
                               child: Text(
-                                'Pression sanguine',
+                                'Type',
                                 style: Theme.of(context)
                                     .primaryTextTheme
                                     .bodyText1,
@@ -140,7 +141,7 @@ class _PetProfileScreenState extends BaseRouteState {
                               Padding(
                                 padding: const EdgeInsets.only(right: 3),
                                 child: Text(
-                                  widget.pet.petBloodPressure,
+                                  widget.pet.petType,
                                   style: Theme.of(context).textTheme.headline2,
                                 ),
                               ),
@@ -169,7 +170,7 @@ class _PetProfileScreenState extends BaseRouteState {
                             Padding(
                               padding: EdgeInsets.only(left: 15),
                               child: Text(
-                                'Densité',
+                                'Race',
                                 style: Theme.of(context)
                                     .primaryTextTheme
                                     .bodyText1,
@@ -184,7 +185,7 @@ class _PetProfileScreenState extends BaseRouteState {
                               Padding(
                                 padding: const EdgeInsets.only(right: 3),
                                 child: Text(
-                                  widget.pet.petBoneDensity,
+                                  widget.pet.petBreed,
                                   style: Theme.of(context).textTheme.headline2,
                                 ),
                               ),
@@ -251,7 +252,7 @@ class _PetProfileScreenState extends BaseRouteState {
                     ],
                   ),
                 ),
-                
+
                 // Padding(
                 //   padding: const EdgeInsets.only(top: 25),
                 //   child: Row(

@@ -173,6 +173,20 @@ class _LogInScreen2State extends BaseRouteState {
                               return;
                             }
 
+                            if (response.status == true &&
+                                apiController.user.value.role != "owner") {
+                              MotionToast(
+                                icon: Icons.warning,
+                                primaryColor: Colors.red,
+                                title: Text("Error de connection"),
+                                description:
+                                    Text("Type d'utilisateur incorrecte"),
+                                width: 300,
+                                height: 100,
+                              ).show(context);
+                              return;
+                            }
+
                             MotionToast(
                                 icon: Icons.verified,
                                 primaryColor: Colors.green,

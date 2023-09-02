@@ -23,4 +23,11 @@ class ApiEndPoints {
 
   // RESERVATIONS
   static const String FIND_ALL_RESERVATIONS_URL = "reservations";
+  static const String CREATE_RESERVATION = "reservations/create";
+
+  // OFFRES
+  static const FIND_ALL_OFFRES = "offres";
+
+  // ARITCLES
+  static const FIND_ALL_ARTICLES = "articles";
 }

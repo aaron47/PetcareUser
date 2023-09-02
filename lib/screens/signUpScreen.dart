@@ -97,7 +97,7 @@ class _SIgnUpScreenState extends BaseRouteState {
                     controller: _fullNameController,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter your full name';
+                        return 'Veuillez entrer votre nom complet.';
                       }
                       return null;
                     },
@@ -121,6 +121,12 @@ class _SIgnUpScreenState extends BaseRouteState {
                       hintText: 'Lien de votre image',
                       contentPadding: EdgeInsets.only(top: 5, left: 10),
                     ),
+                  ),
+                ),
+                CircleAvatar(
+                  radius: 80,
+                  backgroundImage: NetworkImage(
+                    _imageLinkController.text ?? "",
                   ),
                 ),
                 Padding(
@@ -248,8 +254,6 @@ class _SIgnUpScreenState extends BaseRouteState {
                           _imageLinkController.text,
                           _addressController.text,
                           _passwordController.text,
-
-
                         );
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => LogInScreen1(

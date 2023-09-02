@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:pet_user_app/models/article.dart';
+import 'package:pet_user_app/models/offre.dart';
 import 'package:pet_user_app/models/reservation.dart';
 import 'package:pet_user_app/network/remote/Requests/add_offering_user_request.dart';
 import 'package:pet_user_app/network/remote/Requests/create_pet_request.dart';
+import 'package:pet_user_app/network/remote/Requests/create_reservation.dart';
 import 'package:pet_user_app/network/remote/Requests/create_service_request.dart';
 import 'package:pet_user_app/network/remote/Requests/login_request.dart';
 import 'package:pet_user_app/network/remote/Requests/signup_request.dart';
@@ -130,10 +133,10 @@ class ApiService {
             List<Service>.from(value.data.map((x) => Service.fromJson(x))));
   }
 
-  static Future<List<Service>> findAllServices(String userEmail) async {
+  static Future<List<Service>> findAllServices() async {
     try {
-      final response =
-          await _dio.get(ApiEndPoints.GET_SERVICES_URL + userEmail);
+      final response = await _dio.get(ApiEndPoints.GET_SERVICES_URL);
+      print(response.data);
       List<Service> services = (response.data as List)
           .map((json) => Service.fromJson(json))
           .toList();
@@ -175,6 +178,19 @@ class ApiService {
     }
   }
 
+  static Future<void> createReservation(
+      CreateReservation createReservationRequest) async {
+    try {
+      await _dio.post(
+        ApiEndPoints.CREATE_RESERVATION,
+        data: createReservationRequest.toJson(),
+      );
+    } catch (error) {
+      throw Exception(
+          "Error creating reservation, please try again later: $error");
+    }
+  }
+
   static Future<void> declineReservation(String id) async {
     try {
       await _dio.post(
@@ -182,6 +198,31 @@ class ApiService {
       );
     } catch (error) {
       throw Exception("Error declining reservation: $error");
+    }
+  }
+
+  static Future<List<Offre>> findAllOffres() async {
+    try {
+      final response = await _dio.get(ApiEndPoints.FIND_ALL_OFFRES);
+      print(response.data);
+      List<Offre> offres =
+          (response.data as List).map((json) => Offre.fromJson(json)).toList();
+      return offres;
+    } catch (error) {
+      throw Exception("Error fetching services: $error");
+    }
+  }
+
+  static Future<List<Article>> findAllArticles() async {
+    try {
+      final response = await _dio.get(ApiEndPoints.FIND_ALL_ARTICLES);
+      print(response.data);
+      List<Article> articles = (response.data as List)
+          .map((json) => Article.fromJson(json))
+          .toList();
+      return articles;
+    } catch (error) {
+      throw Exception("Error fetching articles $error");
     }
   }
 }

@@ -6,12 +6,14 @@ import 'package:pet_user_app/models/businessLayer/baseRoute.dart';
 import 'package:pet_user_app/screens/reviewBookingScreen.dart';
 
 import '../controllers/ApiController.dart';
+import '../models/service.dart';
 import '../models/user.dart';
 
 class PetBoardoingDetailScreen extends BaseRoute {
   // PetBoardoingDetailScreen() : super();
   final User user;
-  PetBoardoingDetailScreen({this.user, a, o})
+  final Service service;
+  PetBoardoingDetailScreen({this.user, this.service, a, o})
       : super(a: a, o: o, r: 'PetBoardoingDetailScreen');
   @override
   _PetBoardoingDetailScreenState createState() =>
@@ -203,11 +205,36 @@ class _PetBoardoingDetailScreenState extends BaseRouteState {
             ),
             Container(
               padding: EdgeInsets.only(left: 15, right: 15, top: 10),
-              child: Row(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                      child: Text(
-                          "Je viens d'une famille d'amoureux des animaux. J'ai toujours pris soin des animaux de ma famille. J'avais quatorze ans la première fois que j'ai gardé les animaux d'amis pendant leur absence."))
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.phone,
+                        color: Color(0xFF8f8f8f),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Telephone ${widget.user.phone}",
+                        style: Theme.of(context).primaryTextTheme.headline1,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.email,
+                        color: Color(0xFF8f8f8f),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Email: ${widget.user.email}",
+                        style: Theme.of(context).primaryTextTheme.headline1,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -232,7 +259,22 @@ class _PetBoardoingDetailScreenState extends BaseRouteState {
                   itemCount: apiController.services.length,
                   itemBuilder: (context, index) {
                     var service = apiController.services[index];
-                    return Text(service.serviceName);
+                    return Row(
+                      children: [
+                        service.imageLink != ""
+                            ? Image.network(
+                                service.imageLink,
+                                width: 75,
+                                height: 75,
+                              )
+                            : Image.asset("assets/homepetboarding.png",
+                                width: 75, height: 75),
+                        Text(
+                          service.serviceName,
+                          style: Theme.of(context).primaryTextTheme.headline1,
+                        ),
+                      ],
+                    );
                   },
                 ),
               ),
@@ -611,10 +653,12 @@ class _PetBoardoingDetailScreenState extends BaseRouteState {
                         builder: (context) => ReviewBookingScreen(
                               a: widget.analytics,
                               o: widget.observer,
+                              user: widget.user,
+                              service: widget.service,
                             )));
                   },
                   child: Text(
-                    "Réservez maintenant à 70 DT / jour",
+                    "Réservez maintenant à ${widget.service.price} DT / jour",
                   ))),
         ),
       ),

@@ -23,10 +23,6 @@ class _AddPetScreenState extends BaseRouteState {
   final TextEditingController _petTypeController = TextEditingController();
   final TextEditingController _petBreedController = TextEditingController();
   final TextEditingController _petGenderController = TextEditingController();
-  final TextEditingController _petBloodPressureController =
-      TextEditingController();
-  final TextEditingController _petBoneDensityController =
-      TextEditingController();
   final TextEditingController _petWeightController = TextEditingController();
 
   @override
@@ -100,6 +96,12 @@ class _AddPetScreenState extends BaseRouteState {
                   ),
                 ),
               ),
+              CircleAvatar(
+                radius: 80,
+                backgroundImage: NetworkImage(
+                  _petImageLinkController.text ?? "",
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: TextFormField(
@@ -126,26 +128,6 @@ class _AddPetScreenState extends BaseRouteState {
                   controller: _petGenderController,
                   decoration: InputDecoration(
                     hintText: 'Genre  ',
-                    contentPadding: EdgeInsets.only(top: 5, left: 10),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: TextFormField(
-                  controller: _petBloodPressureController,
-                  decoration: InputDecoration(
-                    hintText: 'Pression artérielle  ',
-                    contentPadding: EdgeInsets.only(top: 5, left: 10),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: TextFormField(
-                  controller: _petBoneDensityController,
-                  decoration: InputDecoration(
-                    hintText: 'Densité osseuse  ',
                     contentPadding: EdgeInsets.only(top: 5, left: 10),
                   ),
                 ),
@@ -187,8 +169,6 @@ class _AddPetScreenState extends BaseRouteState {
                         petType: _petTypeController.text,
                         petBreed: _petBreedController.text,
                         petGender: _petGenderController.text,
-                        petBloodPressure: _petBloodPressureController.text,
-                        petBoneDensity: _petBoneDensityController.text,
                         petWeight: _petWeightController.text,
                         petOwner: apiController.user.value.email,
                       ),

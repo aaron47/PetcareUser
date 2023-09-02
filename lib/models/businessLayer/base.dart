@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_user_app/models/businessLayer/apiHelper.dart';
 import 'package:pet_user_app/models/businessLayer/businessRule.dart';
+import 'package:pet_user_app/models/service.dart';
 
 import '../pet.dart';
 import '../user.dart';
@@ -17,12 +18,14 @@ class Base extends StatefulWidget {
   String email;
   Pet pet;
   User user;
+  Service service;
 
   Base({this.analytics, this.observer, this.routeName, this.email, this.pet});
 
   get emailValue => this.email;
   get petValue => this.pet;
   get userValue => this.user;
+  get serviceValue => this.service;
 
   @override
   BaseState createState() => BaseState();

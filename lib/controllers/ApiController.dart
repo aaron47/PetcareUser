@@ -1,4 +1,7 @@
 import 'package:get/get.dart';
+import 'package:pet_user_app/models/article.dart';
+import 'package:pet_user_app/network/remote/Requests/create_reservation.dart';
+import 'package:pet_user_app/models/offre.dart';
 import 'package:pet_user_app/models/reservation.dart';
 import 'package:pet_user_app/network/remote/Requests/create_pet_request.dart';
 import 'package:pet_user_app/network/remote/Requests/signup_request.dart';
@@ -16,14 +19,24 @@ class ApiController extends GetxController {
   var error = ''.obs;
   var user = User().obs;
   var pets = <Pet>[].obs;
+
+  // services
   var services = <Service>[].obs;
   var usersInService = <String>[].obs;
   var users = <User>[].obs;
   var userServices = <Service>[].obs;
+
+  // reservations
   var reservations = <Reservation>[].obs;
   var reservationsUsers = <User>[].obs;
   var reservationsServices = <Service>[].obs;
   var reservationsPets = <Pet>[].obs;
+
+  // offres
+  var offres = <Offre>[].obs;
+
+  // articles
+  var articles = <Article>[].obs;
 
   Future<ResponseHelper> loginUser(String email, String password) async {
     isLoading.value = true;
@@ -108,6 +121,18 @@ class ApiController extends GetxController {
     }
   }
 
+  Future<void> fetchAllServices() async {
+    isLoading.value = true;
+    try {
+      var fetchedServices = await ApiService.findAllServices();
+      services.value = fetchedServices;
+    } catch (e) {
+      error.value = "Erorr fetching services: $e";
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> fetchUserServices(String userEmail) async {
     isLoading.value = true;
     try {
@@ -161,12 +186,46 @@ class ApiController extends GetxController {
     }
   }
 
+  Future<void> createReservation(
+      CreateReservation createReservationRequest) async {
+    isLoading.value = true;
+    try {
+      await ApiService.createReservation(createReservationRequest);
+    } catch (e) {
+      error.value = "$e";
+    }
+  }
+
   Future<void> declineReservation(String id) async {
     isLoading.value = true;
     try {
       await ApiService.declineReservation(id);
     } catch (e) {
       error.value = 'Error declining reservation';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchAllOffres() async {
+    isLoading.value = true;
+    try {
+      var fetchedOffres = await ApiService.findAllOffres();
+      offres.value = fetchedOffres;
+    } catch (e) {
+      error.value = "Erorr fetching services: $e";
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchAllArticles() async {
+    isLoading.value = true;
+    try {
+      var fetchedArticles = await ApiService.findAllArticles();
+      articles.value = fetchedArticles;
+    } catch (e) {
+      error.value = "Erorr fetching services: $e";
     } finally {
       isLoading.value = false;
     }

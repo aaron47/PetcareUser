@@ -12,8 +12,6 @@ class CreatePetRequest {
   final String petType;
   final String petBreed;
   final String petGender;
-  final String petBloodPressure;
-  final String petBoneDensity;
   final String petWeight;
   final String petOwner;
 
@@ -24,8 +22,6 @@ class CreatePetRequest {
     @required this.petType,
     @required this.petBreed,
     @required this.petGender,
-    @required this.petBloodPressure,
-    @required this.petBoneDensity,
     @required this.petWeight,
     @required this.petOwner,
   });
@@ -37,8 +33,6 @@ class CreatePetRequest {
         "petType": petType,
         "petBreed": petBreed,
         "petGender": petGender,
-        "petBloodPressure": petBloodPressure,
-        "petBoneDensity": petBoneDensity,
         "petWeight": petWeight,
         "petOwner": petOwner,
       };

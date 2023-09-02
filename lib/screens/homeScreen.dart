@@ -1,9 +1,13 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pet_user_app/models/businessLayer/baseRoute.dart';
 import 'package:pet_user_app/screens/dogWalkingScreen.dart';
 import 'package:pet_user_app/screens/petBoardingScreen.dart';
+import 'package:pet_user_app/screens/service_screen.dart';
 import 'package:pet_user_app/screens/veterinaryScreen.dart';
+
+import '../controllers/ApiController.dart';
 
 class HomeScreen extends BaseRoute {
   // HomeScreen() : super();
@@ -15,6 +19,20 @@ class HomeScreen extends BaseRoute {
 class _HomeScreenState extends BaseRouteState {
   int selectedValue = 0;
   _HomeScreenState() : super();
+
+  final ApiController apiController = Get.find<ApiController>();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await this.apiController.fetchAllServices();
+      await this.apiController.fetchAllOffres();
+      await this.apiController.fetchAllArticles();
+      print("ARTICLES: ${this.apiController.articles.length}");
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,195 +102,129 @@ class _HomeScreenState extends BaseRouteState {
         ),
         body: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: 37,
-                  width: MediaQuery.of(context).size.width,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Icon(Icons.search),
-                      ),
-                      hintText: 'Chercher',
-                      contentPadding: EdgeInsets.only(top: 5, left: 10),
+          child: Column(
+            children: [
+              Container(
+                height: 37,
+                width: MediaQuery.of(context).size.width,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.only(right: 15),
+                      child: Icon(Icons.search),
                     ),
+                    hintText: 'Chercher',
+                    contentPadding: EdgeInsets.only(top: 5, left: 10),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 25),
-                        child: Text(
-                          'Que recherchez-vous ?',
-                          style: Theme.of(context).primaryTextTheme.bodyText1,
-                        ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 25),
+                      child: Text(
+                        'Que recherchez-vous ?',
+                        style: Theme.of(context).primaryTextTheme.bodyText1,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Row(
-                          children: [
-                            Text('Nos services', style: Theme.of(context).primaryTextTheme.subtitle2),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Row(
+                        children: [
+                          Text('Nos services',
+                              style:
+                                  Theme.of(context).primaryTextTheme.subtitle2),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-                Container(
-                  margin: EdgeInsets.only(top: 15),
-                  height: 110,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView(
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                height: 130,
+                width: MediaQuery.of(context).size.width,
+                child: Obx(
+                  () => ListView.builder(
                     shrinkWrap: true,
+                    itemCount: this.apiController.services.length,
                     scrollDirection: Axis.horizontal,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PetBoardingScreen(
-                                    a: widget.analytics,
-                                    o: widget.observer,
-                                  )));
-                        },
-                        child: Container(
-                          // color: Colors.red,
-                          width: 90,
-                          height: 75,
-                          child: Card(
-                            elevation: 5,
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/homepetboarding2.png',
-                                  fit: BoxFit.contain,
+                    itemBuilder: (BuildContext context, int index) {
+                      var service = this.apiController.services[index];
+                      return Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ServiceScreen(
+                                        service: service,
+                                        a: widget.analytics,
+                                        o: widget.observer,
+                                      )));
+                            },
+                            child: Container(
+                              // color: Colors.red,
+                              width: 90,
+                              child: Card(
+                                elevation: 5,
+                                child: Column(
+                                  children: [
+                                    service.imageLink != ""
+                                        ? Image.network(
+                                            service.imageLink,
+                                            fit: BoxFit.contain,
+                                          )
+                                        : Image.asset(
+                                            "assets/homepetboarding.png",
+                                            fit: BoxFit.cover),
+                                    Text(
+                                      service.serviceName,
+                                      style: Theme.of(context)
+                                          .primaryTextTheme
+                                          .headline6,
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  'Hébergement',
-                                  style: Theme.of(context).primaryTextTheme.headline6,
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => DogWalkingScreen(
-                                    a: widget.analytics,
-                                    o: widget.observer,
-                                  )));
-                        },
-                        child: Container(
-                          width: 90,
-                          height: 95,
-                          child: Card(
-                            elevation: 5,
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/homepetboarding3.png',
-                                  fit: BoxFit.contain,
-                                ),
-                                Text(
-                                  'Promenade',
-                                  style: Theme.of(context).primaryTextTheme.headline6,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => VeterinaryScreen(
-                                    a: widget.analytics,
-                                    o: widget.observer,
-                                  )));
-                        },
-                        child: Container(
-                          width: 90,
-                          height: 95,
-                          child: Card(
-                            elevation: 5,
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/homepetboarding4.png',
-                                  fit: BoxFit.contain,
-                                ),
-                                Text(
-                                  'Vétérinaire',
-                                  style: Theme.of(context).primaryTextTheme.headline6,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (context) => ProductStoreScreen(
-                          //           a: widget.analytics,
-                          //           o: widget.observer,
-                          //         )));
-                        },
-                        child: Container(
-                          width: 90,
-                          height: 95,
-                          child: Card(
-                            elevation: 5,
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/homepetboarding2.png',
-                                  fit: BoxFit.contain,
-                                ),
-                                Text(
-                                  'Nourriture',
-                                  style: Theme.of(context).primaryTextTheme.headline6,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                        ],
+                      );
+                    },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 35),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Les meilleurs offres', style: Theme.of(context).primaryTextTheme.bodyText1),
-                      Text(
-                        'Tout afficher',
-                        style: Theme.of(context).primaryTextTheme.headline6,
-                      )
-                    ],
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Les meilleurs offres',
+                        style: Theme.of(context).primaryTextTheme.bodyText1),
+                    Text(
+                      'Tout afficher',
+                      style: Theme.of(context).primaryTextTheme.headline6,
+                    )
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 90,
-                    child: PageView.builder(
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 90,
+                  child: Obx(
+                    () => PageView.builder(
                       onPageChanged: (val) {
                         selectedValue = val;
                         setState(() {});
                       },
-                      itemCount: 3,
+                      itemCount: this.apiController.offres.length,
                       itemBuilder: (context, position) {
+                        var offre = this.apiController.offres[position];
                         return Stack(
                           alignment: Alignment.bottomCenter,
                           children: [
@@ -280,14 +232,20 @@ class _HomeScreenState extends BaseRouteState {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                  width: MediaQuery.of(context).size.width - 100,
+                                  width:
+                                      MediaQuery.of(context).size.width - 100,
                                   // color: Colors.red,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
-                                        child: Text('Pension pour chiens avec Dr. malek', style: Theme.of(context).primaryTextTheme.headline3),
+                                        padding: const EdgeInsets.only(
+                                            top: 15, left: 10, bottom: 10),
+                                        child: Text(offre.description,
+                                            style: Theme.of(context)
+                                                .primaryTextTheme
+                                                .headline3),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
@@ -295,7 +253,10 @@ class _HomeScreenState extends BaseRouteState {
                                         ),
                                         child: Row(
                                           children: [
-                                            Text('01/07 -> 31/08', style: Theme.of(context).primaryTextTheme.headline2),
+                                            Text('01/07 -> 31/08',
+                                                style: Theme.of(context)
+                                                    .primaryTextTheme
+                                                    .headline2),
                                             // Padding(
                                             //   padding: const EdgeInsets.only(
                                             //       left: 2, right: 2),
@@ -312,14 +273,18 @@ class _HomeScreenState extends BaseRouteState {
                                             //       .headline2,
                                             // ),
                                             Padding(
-                                              padding: const EdgeInsets.only(left: 2, right: 2),
+                                              padding: const EdgeInsets.only(
+                                                  left: 2, right: 2),
                                               child: Icon(
                                                 Icons.circle,
                                                 size: 10,
                                                 color: Colors.white,
                                               ),
                                             ),
-                                            Text('15 dt/ jour', style: Theme.of(context).primaryTextTheme.headline2)
+                                            Text('${offre.prix}/ mois',
+                                                style: Theme.of(context)
+                                                    .primaryTextTheme
+                                                    .headline2)
                                           ],
                                         ),
                                       )
@@ -331,12 +296,13 @@ class _HomeScreenState extends BaseRouteState {
                                   child: CircleAvatar(
                                       radius: 30,
                                       // backgroundColor: Colors.red,
-                                      backgroundImage: AssetImage('assets/home4.png')),
+                                      backgroundImage:
+                                          AssetImage('assets/home4.png')),
                                 )
                               ],
                             ),
                             DotsIndicator(
-                              dotsCount: 3,
+                              dotsCount: this.apiController.offres.length,
                               position: double.parse(selectedValue.toString()),
                               decorator: DotsDecorator(
                                 color: Colors.black87, // Inactive color
@@ -347,29 +313,37 @@ class _HomeScreenState extends BaseRouteState {
                         );
                       },
                     ),
-                    decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 35),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Articles', style: Theme.of(context).primaryTextTheme.bodyText1),
-                      Text('Tout afficher', style: Theme.of(context).primaryTextTheme.headline6)
-                    ],
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 35),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Articles',
+                        style: Theme.of(context).primaryTextTheme.bodyText1),
+                    Text('Tout afficher',
+                        style: Theme.of(context).primaryTextTheme.headline6)
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 15),
-                  child: ListView(
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Obx(
+                  () => ListView.builder(
+                    itemCount: this.apiController.articles.length,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      Container(
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
                         height: 110,
                         child: Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
                           elevation: 5,
                           child: Container(
                               padding: EdgeInsets.all(3),
@@ -377,181 +351,29 @@ class _HomeScreenState extends BaseRouteState {
                               child: Row(
                                 children: [
                                   Container(
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(image: AssetImage('assets/home3.png'), fit: BoxFit.cover),
-                                              color: Colors.red,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10),
-                                              )),
-                                          height: 70,
-                                          width: 80,
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.only(top: 2, bottom: 2, left: 7, right: 7),
-                                          margin: EdgeInsets.only(top: 3),
-                                          child: Text(
-                                            'Behaviour',
-                                            style: Theme.of(context).primaryTextTheme.headline6,
-                                          ),
-                                          decoration: BoxDecoration(color: Color(0xFFc9d0f2), borderRadius: BorderRadius.all(Radius.circular(10))),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
                                       margin: EdgeInsets.only(left: 10),
                                       // color: Colors.green,
-                                      width: MediaQuery.of(context).size.width - 134,
+                                      width: MediaQuery.of(context).size.width -
+                                          134,
                                       height: 120,
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text('Ceci est une bonne nouvelle', style: Theme.of(context).primaryTextTheme.bodyText1),
-                                              Icon(
-                                                Icons.bookmark,
-                                                color: Theme.of(context).primaryColor,
-                                              )
-                                            ],
-                                          ),
-                                          Text('@ 10th february 2021'),
-                                          Expanded(
-                                            child: Text(
-                                              'Lorem ipsum is a placeholder text,Lorem ipsum is a placeholder text ',
-                                              style: Theme.of(context).primaryTextTheme.subtitle2,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 3,
-                                            ),
-                                          ),
-                                        ],
-                                      ))
-                                ],
-                              )),
-                        ),
-                      ),
-                      Container(
-                        height: 110,
-                        child: Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                          elevation: 5,
-                          child: Container(
-                              padding: EdgeInsets.all(3),
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(image: AssetImage('assets/home3.png'), fit: BoxFit.cover),
-                                              color: Colors.red,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10),
-                                              )),
-                                          height: 70,
-                                          width: 80,
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.only(top: 2, bottom: 2, left: 7, right: 7),
-                                          margin: EdgeInsets.only(top: 3),
-                                          child: Text('Behaviour', style: Theme.of(context).primaryTextTheme.headline6),
-                                          decoration: BoxDecoration(color: Color(0xFFc9d0f2), borderRadius: BorderRadius.all(Radius.circular(10))),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                      margin: EdgeInsets.only(left: 10),
-                                      // color: Colors.green,
-                                      width: MediaQuery.of(context).size.width - 134,
-                                      height: 120,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text('Hello this is good news', style: Theme.of(context).primaryTextTheme.bodyText1),
-                                              Icon(
-                                                Icons.bookmark,
-                                                color: Color(0xFF8F8F8F),
-                                              )
-                                            ],
-                                          ),
-                                          Text(
-                                            '@ 10th february 2021',
-                                            style: Theme.of(context).primaryTextTheme.bodyText2,
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              'In publishing and graphic design, Lorem ipsum is a placeholder text,Lorem ipsum is a placeholder text ',
-                                              overflow: TextOverflow.ellipsis,
-                                              style: Theme.of(context).primaryTextTheme.subtitle2,
-                                              maxLines: 3,
-                                            ),
-                                          ),
-                                        ],
-                                      ))
-                                ],
-                              )),
-                        ),
-                      ),
-                      Container(
-                        height: 110,
-                        child: Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                          elevation: 5,
-                          child: Container(
-                              padding: EdgeInsets.all(3),
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(image: AssetImage('assets/home3.png'), fit: BoxFit.cover),
-                                              color: Colors.red,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10),
-                                              )),
-                                          height: 70,
-                                          width: 80,
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.only(top: 2, bottom: 2, left: 7, right: 7),
-                                          margin: EdgeInsets.only(top: 3),
-                                          child: Text('Behaviour', style: Theme.of(context).primaryTextTheme.headline6),
-                                          decoration: BoxDecoration(color: Color(0xFFc9d0f2), borderRadius: BorderRadius.all(Radius.circular(10))),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                      margin: EdgeInsets.only(left: 10),
-                                      // color: Colors.green,
-                                      width: MediaQuery.of(context).size.width - 134,
-                                      height: 120,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
                                                 'Hello this is good news',
-                                                style: Theme.of(context).primaryTextTheme.bodyText1,
+                                                style: Theme.of(context)
+                                                    .primaryTextTheme
+                                                    .bodyText1,
                                               ),
                                               Icon(
                                                 Icons.bookmark,
-                                                color: Theme.of(context).primaryColor,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
                                               )
                                             ],
                                           ),
@@ -560,7 +382,9 @@ class _HomeScreenState extends BaseRouteState {
                                             child: Text(
                                               'In publishing and graphic design, Lorem ipsum is a placeholder text,Lorem ipsum is a placeholder text ',
                                               overflow: TextOverflow.ellipsis,
-                                              style: Theme.of(context).primaryTextTheme.subtitle2,
+                                              style: Theme.of(context)
+                                                  .primaryTextTheme
+                                                  .subtitle2,
                                               maxLines: 3,
                                             ),
                                           ),
@@ -569,25 +393,25 @@ class _HomeScreenState extends BaseRouteState {
                                 ],
                               )),
                         ),
-                      )
-                    ],
+                      );
+                    },
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ));
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 
-  bool isloading = true;
+  // bool isloading = true;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 }
