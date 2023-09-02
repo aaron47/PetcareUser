@@ -1,18 +1,51 @@
+import 'dart:math';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_user_app/models/businessLayer/baseRoute.dart';
+import 'package:pet_user_app/models/posts.dart';
 import 'package:pet_user_app/screens/addPostScreen.dart';
 import 'package:pet_user_app/screens/commentScreen.dart';
 
 class PostListScreen extends BaseRoute {
   // PostListScreen() : super();
-  PostListScreen({a, o}) : super(a: a, o: o, r: 'PostListScreen');
+  PostListScreen() : super();
   @override
   _PostListScreenState createState() => new _PostListScreenState();
 }
 
 class _PostListScreenState extends BaseRouteState {
   _PostListScreenState() : super();
+
+  bool isDataLoaded = false;
+
+  List<Post> posts = [];
+  Future<void> fetchData() async {
+    try {
+      var dio = Dio();
+      var response = await dio.get(
+        'https://us-central1-petcare-a1918.cloudfunctions.net/api/publications',
+      );
+
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        List<dynamic> jsonDataList = response.data;
+
+        List<Post> fetchedPosts = jsonDataList.map((jsonData) => Post.fromJson(jsonData)).toList();
+
+        // Update the screen with the fetched data
+        setState(() {
+          posts = fetchedPosts;
+          isDataLoaded = true; // Set the flag to true when data is loaded
+        });
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,245 +79,144 @@ class _PostListScreenState extends BaseRouteState {
         ),
         body: Padding(
           padding: EdgeInsets.only(left: 10, right: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: 37,
-                  width: MediaQuery.of(context).size.width,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Icon(Icons.search),
-                      ),
-                      hintText: 'rechercher',
-                      contentPadding: EdgeInsets.only(top: 5, left: 10),
+          child: Column(
+            children: [
+              Container(
+                height: 37,
+                width: MediaQuery.of(context).size.width,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.only(right: 15),
+                      child: Icon(Icons.search),
                     ),
+                    hintText: 'rechercher',
+                    contentPadding: EdgeInsets.only(top: 5, left: 10),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Card(
-                    elevation: 3,
-                    child: Container(
-                      height: 365,
-                      width: MediaQuery.of(context).size.width,
-                      // color: Colors.red,
-                      child: Column(
-                        // mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: Theme.of(context).primaryColor,
-                                      radius: 25,
-                                      child: CircleAvatar(
-                                        radius: 24,
-                                        child: Icon(FontAwesomeIcons.user),
-                                        backgroundColor: Colors.white,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 15),
-                                      child: Text(
-                                        'Sara abid',
-                                        style: Theme.of(context).primaryTextTheme.headline1,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 15, top: 10),
-                            child: Text('This is my favorite'),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 5),
-                            width: MediaQuery.of(context).size.width,
-                            height: 220,
-                            decoration: BoxDecoration(
-                                //  color: Colors.red,
-                                image: DecorationImage(image: AssetImage('assets/catimage4.png'))),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  width: 70,
-                                  // color: Colors.red,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+              isDataLoaded
+                  ? Expanded(
+                      child: ListView.builder(
+                          shrinkWrap: true, // Set to true to make the ListView adapt to its content
+                          itemCount: posts.length,
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (context, index) {
+                            final post = posts[index];
+                            return Padding(
+                              padding: EdgeInsets.only(top: 10),
+                              child: Card(
+                                elevation: 3,
+                                child: Container(
+                                  // height: 365,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        children: [
-                                          Icon(FontAwesomeIcons.heart),
-                                          Padding(
-                                            padding: const EdgeInsets.only(left: 5, top: 5),
-                                            child: Text('5'),
-                                          )
-                                        ],
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (context) => CommentScreen(
-                                                    a: widget.analytics,
-                                                    o: widget.observer,
-                                                  )));
-                                        },
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10, right: 10, top: 15),
                                         child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Icon(Icons.message),
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 5, top: 5),
-                                              child: Text('0'),
-                                            )
+                                            Row(
+                                              children: [
+                                                CircleAvatar(
+                                                  backgroundColor: Theme.of(context).primaryColor,
+                                                  radius: 25,
+                                                  child: CircleAvatar(
+                                                    radius: 24,
+                                                    child: Icon(FontAwesomeIcons.user),
+                                                    backgroundColor: Colors.white,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: 15),
+                                                  child: Text(
+                                                    post.titre,
+                                                    style: Theme.of(context).primaryTextTheme.headline1,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Icon(FontAwesomeIcons.share),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 5, top: 0, right: 10),
-                                      child: Text('partager'),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Card(
-                    elevation: 3,
-                    child: Container(
-                      height: 365,
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: Theme.of(context).primaryColor,
-                                      radius: 25,
-                                      child: CircleAvatar(
-                                        radius: 24,
-                                        child: Icon(FontAwesomeIcons.user),
-                                        backgroundColor: Colors.white,
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 15, top: 10),
+                                        child: Text(post.description),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 15),
-                                      child: Text(
-                                        'Siwar labiedh',
-                                        style: Theme.of(context).primaryTextTheme.headline1,
+                                      Container(
+                                        margin: EdgeInsets.only(top: 5),
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 220,
+                                        decoration: BoxDecoration(
+                                          //  color: Colors.red,
+                                          image: posts[index].image != null ? DecorationImage(image: NetworkImage(posts[index].image)) : null,
+                                        ),
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 15, top: 10),
-                            child: Text('This is my favorite'),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 5),
-                            width: MediaQuery.of(context).size.width,
-                            height: 220,
-                            decoration: BoxDecoration(
-                                //  color: Colors.red,
-                                image: DecorationImage(image: AssetImage('assets/catimage3.png'))),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  width: 70,
-                                  // color: Colors.red,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Icon(FontAwesomeIcons.heart),
-                                          Padding(
-                                            padding: const EdgeInsets.only(left: 5, top: 5),
-                                            child: Text('5'),
-                                          )
-                                        ],
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (context) => CommentScreen(
-                                                    a: widget.analytics,
-                                                    o: widget.observer,
-                                                  )));
-                                        },
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
                                         child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Icon(Icons.message),
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 5, top: 5),
-                                              child: Text('0'),
+                                            Container(
+                                              margin: EdgeInsets.only(left: 10),
+                                              width: 70,
+                                              // color: Colors.red,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Icon(FontAwesomeIcons.heart),
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(left: 5, top: 5),
+                                                        child: Text('${Random().nextInt(4)}'),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.of(context).push(MaterialPageRoute(
+                                                          builder: (context) => CommentScreen(
+                                                                a: widget.analytics,
+                                                                o: widget.observer,
+                                                              )));
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(Icons.message),
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(left: 5, top: 5),
+                                                          child: Text('0'),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(FontAwesomeIcons.share),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 5, top: 0, right: 10),
+                                                  child: Text('partager'),
+                                                )
+                                              ],
                                             )
                                           ],
                                         ),
-                                      ),
+                                      )
                                     ],
                                   ),
                                 ),
-                                Row(
-                                  children: [
-                                    Icon(FontAwesomeIcons.share),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 5, top: 0, right: 10),
-                                      child: Text('partager'),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                              ),
+                            );
+                          }),
+                    )
+                  : Container(),
+            ],
           ),
         ));
   }
@@ -299,5 +231,6 @@ class _PostListScreenState extends BaseRouteState {
   @override
   void initState() {
     super.initState();
+    fetchData(); // Call the method to fetch data
   }
 }

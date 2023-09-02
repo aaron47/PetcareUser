@@ -6,7 +6,7 @@ Service serviceFromJson(String str) => Service.fromJson(json.decode(str));
 
 String serviceToJson(Service data) => json.encode(data.toJson());
 
-class Service {
+class  Service {
   final String serviceName;
   final List<String> usersOfferingService;
 
